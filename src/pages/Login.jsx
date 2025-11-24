@@ -29,7 +29,6 @@ const Login = () => {
       localStorage.setItem('refresh_token', response.data.refresh);
       localStorage.setItem('user', JSON.stringify(response.data.user));
 
-      // Navigate based on user type
       if (response.data.user.user_type === 'admin') {
         navigate('/admin/dashboard');
       } else {

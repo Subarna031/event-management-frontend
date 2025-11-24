@@ -10,7 +10,6 @@ const api = axios.create({
   withCredentials: false,
 });
 
-// Add token to requests
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('access_token');
@@ -24,12 +23,10 @@ api.interceptors.request.use(
   }
 );
 
-// Handle response errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token expired or invalid
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
       localStorage.removeItem('user');
@@ -39,20 +36,19 @@ api.interceptors.response.use(
   }
 );
 
-// Auth APIs
+
 export const authAPI = {
   login: (credentials) => api.post('/login/', credentials),
   register: (userData) => api.post('/register/', userData),
 };
 
-// Events APIs
 export const eventsAPI = {
-  getAll: () => api.get('/events/'),
+  getAll: (sort = 'newest') => api.get(`/events/?sort=${sort}`),
   create: (eventData) => api.post('/events/', eventData),
   delete: (id) => api.delete(`/events/${id}/`),
-//   toggleInterest: (id) => api.post(`/events/${id}/toggle_interest/`),
-  toggleInterest: (id) => api.post(`/events/${id}/interested/`),
+  Interested: (id) => api.post(`/events/${id}/interested/`),
   getInterestedUsers: (id) => api.get(`/events/${id}/interested_users/`),
+  sendNotification: (id, data)=>api.post(`/events/${id}/send_notification/`, data),
 };
 
 export default api;

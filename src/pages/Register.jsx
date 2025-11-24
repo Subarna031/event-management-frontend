@@ -30,8 +30,6 @@ const Register = () => {
       localStorage.setItem('access_token', response.data.access);
       localStorage.setItem('refresh_token', response.data.refresh);
       localStorage.setItem('user', JSON.stringify(response.data.user));
-
-      // Navigate based on user type
       if (response.data.user.user_type === 'admin') {
         navigate('/admin/dashboard');
       } else {
@@ -96,6 +94,8 @@ const Register = () => {
           >
             <option value="user">Regular User</option>
             <option value="admin">Admin</option>
+            <option value="organizer">Organizer</option>
+
             
           </select>
           <button

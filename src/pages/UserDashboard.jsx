@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, MapPin, Users, LogOut, Heart } from 'lucide-react';
+import { Calendar, MapPin, Users, LogOut, Heart, Filter } from 'lucide-react';
 import { eventsAPI } from '../api/axios';
 
 const UserDashboard = () => {
@@ -8,6 +8,7 @@ const UserDashboard = () => {
   const [user, setUser] = useState(null);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [sortBy, setSortBy] = useState('newest');
 
   useEffect(() => {
     const userData = localStorage.getItem('user');
@@ -16,23 +17,32 @@ const UserDashboard = () => {
       return;
     }
     setUser(JSON.parse(userData));
+    
     fetchEvents();
-  }, [navigate]);
+  
+  }, [navigate, sortBy]); 
 
   const fetchEvents = async () => {
     try {
-      const response = await eventsAPI.getAll();
-      setEvents(response.data);
+      const response = await eventsAPI.getAll(sortBy);
+      const eventData = response.data.results ? response.data.results : response.data;
+      if (Array.isArray(eventData)) {
+          setEvents(eventData);
+      } else {
+          console.error("API did not return an array:", response.data);
+          setEvents([]); 
+      }
     } catch (error) {
       console.error('Error fetching events:', error);
+      setEvents([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const toggleInterest = async (eventId) => {
+  const Interested = async (eventId) => {
     try {
-      await eventsAPI.toggleInterest(eventId);
+      await eventsAPI.Interested(eventId);
       fetchEvents();
     } catch (error) {
       console.error('Error toggling interest:', error);
@@ -73,7 +83,26 @@ const UserDashboard = () => {
       </nav>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <h2 className="text-3xl font-bold text-gray-800 mb-6">Available Events</h2>
+      
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+            <h2 className="text-3xl font-bold text-gray-800">Available Events</h2>
+            
+            <div className="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm border border-gray-200">
+                <div className="flex items-center gap-2 text-gray-500 pl-2">
+                    <Filter size={18} />
+                    <span className="text-sm font-medium">Sort By:</span>
+                </div>
+                <select 
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="bg-transparent py-1 px-2 text-gray-700 font-medium focus:outline-none cursor-pointer"
+                >
+                    <option value="newest">Newest Added</option>
+                    <option value="most_interested">Most Popular</option>
+                    <option value="date">Event Date (Soonest)</option>
+                </select>
+            </div>
+        </div>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {events.map((event) => (
@@ -84,7 +113,7 @@ const UserDashboard = () => {
               <div className="space-y-2 mb-4">
                 <div className="flex items-center gap-2 text-sm text-gray-500">
                   <Calendar size={16} />
-                  {new Date(event.date).toLocaleString()}
+                  {new Date(event.date).toLocaleDateString()}
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-500">
                   <MapPin size={16} />
@@ -97,7 +126,7 @@ const UserDashboard = () => {
               </div>
 
               <button
-                onClick={() => toggleInterest(event.id)}
+                onClick={() => Interested(event.id)}
                 className={`w-full py-3 rounded-lg font-medium transition flex items-center justify-center gap-2 ${
                   event.is_interested
                     ? 'bg-green-500 text-white hover:bg-green-600 shadow-md'
@@ -105,7 +134,7 @@ const UserDashboard = () => {
                 }`}
               >
                 <Heart size={18} fill={event.is_interested ? 'white' : 'none'} />
-                {event.is_interested ? 'Interested ✓' : 'I\'m Interested'}
+                {event.is_interested ? 'Interested' : "I'm Interested"}
               </button>
             </div>
           ))}
@@ -113,7 +142,7 @@ const UserDashboard = () => {
 
         {events.length === 0 && (
           <div className="text-center py-12 bg-white rounded-lg shadow">
-            <p className="text-gray-500 text-lg">No events available at the moment. Check back later!</p>
+            <p className="text-gray-500 text-lg">No events found.</p>
           </div>
         )}
       </div>
