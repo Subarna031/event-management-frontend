@@ -49,6 +49,7 @@ export const eventsAPI = {
   Interested: (id) => api.post(`/events/${id}/interested/`),
   getInterestedUsers: (id) => api.get(`/events/${id}/interested_users/`),
   sendNotification: (id, data)=>api.post(`/events/${id}/send_notification/`, data),
+  getStats: () => api.get('/events/stats/'),
 };
 
 export default api;
