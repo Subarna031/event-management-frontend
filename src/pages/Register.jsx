@@ -31,9 +31,9 @@ const Register = () => {
       localStorage.setItem('refresh_token', response.data.refresh);
       localStorage.setItem('user', JSON.stringify(response.data.user));
       if (response.data.user.user_type === 'admin') {
-        navigate('/admin/dashboard');
+        navigate('/login');
       } else {
-        navigate('/user/dashboard');
+        navigate('/login');
       }
     } catch (err) {
       setError(err.response?.data?.username?.[0] || err.response?.data?.email?.[0] || 'Registration failed. Please try again.');
@@ -94,9 +94,6 @@ const Register = () => {
           >
             <option value="user">Regular User</option>
             <option value="admin">Admin</option>
-            <option value="organizer">Organizer</option>
-
-            
           </select>
           <button
             onClick={handleSubmit}
