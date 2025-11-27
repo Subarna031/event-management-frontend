@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { authAPI } from '../api/axios';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { authAPI } from "../api/axios";
 
 const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    user_type: 'user',
+    username: "",
+    email: "",
+    password: "",
+    user_type: "user",
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -22,21 +22,25 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
       const response = await authAPI.register(formData);
-      localStorage.setItem('access_token', response.data.access);
-      localStorage.setItem('refresh_token', response.data.refresh);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-      if (response.data.user.user_type === 'admin') {
-        navigate('/login');
+      localStorage.setItem("access_token", response.data.access);
+      localStorage.setItem("refresh_token", response.data.refresh);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      if (response.data.user.user_type === "admin") {
+        navigate("/login");
       } else {
-        navigate('/login');
+        navigate("/login");
       }
     } catch (err) {
-      setError(err.response?.data?.username?.[0] || err.response?.data?.email?.[0] || 'Registration failed. Please try again.');
+      setError(
+        err.response?.data?.username?.[0] ||
+          err.response?.data?.email?.[0] ||
+          "Registration failed. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -100,15 +104,15 @@ const Register = () => {
             disabled={loading}
             className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg font-medium hover:shadow-lg transition disabled:opacity-50"
           >
-            {loading ? 'Creating Account...' : 'Register'}
+            {loading ? "Creating Account..." : "Register"}
           </button>
         </div>
 
         <div className="mt-6 text-center">
           <p className="text-gray-600">
-            Already have an account?{' '}
+            Already have an account?{" "}
             <button
-              onClick={() => navigate('/login')}
+              onClick={() => navigate("/login")}
               className="text-indigo-600 font-medium hover:underline"
             >
               Login here

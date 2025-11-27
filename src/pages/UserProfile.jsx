@@ -1,5 +1,5 @@
-import React from 'react';
-import { Mail, User, Clock } from 'lucide-react';
+import React from "react";
+import { Mail, User, Clock } from "lucide-react";
 
 const UserProfile = ({ user }) => {
   return (
@@ -11,10 +11,12 @@ const UserProfile = ({ user }) => {
         <h2 className="text-2xl font-bold text-white">{user?.username}</h2>
         <p className="text-indigo-200">Event Enthusiast</p>
       </div>
-      
+
       <div className="p-8 space-y-6">
-        <h3 className="text-xl font-semibold text-gray-800 border-b pb-2">User Information</h3>
-        
+        <h3 className="text-xl font-semibold text-gray-800 border-b pb-2">
+          User Information
+        </h3>
+
         <div className="grid gap-6">
           <div className="flex items-center gap-4 text-gray-600">
             <div className="p-3 bg-indigo-50 rounded-lg text-indigo-600">
@@ -22,7 +24,9 @@ const UserProfile = ({ user }) => {
             </div>
             <div>
               <p className="text-sm text-gray-500">Email Address</p>
-              <p className="font-medium">{user?.email || 'No email provided'}</p>
+              <p className="font-medium">
+                {user?.email || "No email provided"}
+              </p>
             </div>
           </div>
 
