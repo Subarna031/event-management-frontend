@@ -1,6 +1,6 @@
 import React from "react";
 import { History, Heart } from "lucide-react";
-import EventCard from "./EventCard"; // Assumes EventCard is in the same folder
+import EventCard from "./EventCard"; // Assumes EventCard is in the same folder...
 
 const EventHistory = ({ events, onToggleInterest, setActiveTab }) => {
   // Filter events where is_interested is true
